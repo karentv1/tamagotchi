@@ -1,3 +1,30 @@
-.test {
-  color:red;
+@charset "UTF-8";
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+    margin:0px;
+    padding:0px;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+.canvas-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid green; 
+  }
+
+.canvas {
+    border: 3px solid blue; 
+}
+
+.background-grey {
+    background-color:grey;
+}
+
+.background-blue {
+    background-color:blue;
 }
