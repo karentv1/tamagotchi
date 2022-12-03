@@ -1,1 +1,2 @@
 # tamagotchi
+hello test
