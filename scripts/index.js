@@ -147,13 +147,16 @@ var audio = new Audio('music/song.m4a');
 
 
 function playMusic(){
+  var note = document.querySelector('.note')
+
   if (play == true){
-    console.log('audio.pause()')
     audio.pause()
     play = false;
+    note.src = 'img/cross.png'
     return
   }
   audio.play();
   play = true;
+  note.src = 'img/note.png'
 }
 
