@@ -1,56 +1,67 @@
 import * as GameEngine from "../scripts/game.js";
 
-
+// Global variables for Canvas
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
+const canvasWidth = 1024 
+const canvasHeight = 576
 
-
-
-
-let img = new Image();
-img.src = 'img/tamagotchi.png';
-img.onload = function() {
-  init();
-};
-
-
-
-
-var myObject = new GameEngine.GameObject(100,100,25,25,1,5,'blue', c)
-
+// Define Buttons
 var playButton = new GameEngine.GameObject(100, canvas.height-100, 25, 100, 0, 0, 'white', c)
 var feedButton = new GameEngine.GameObject(250, canvas.height-100, 25, 100, 0, 0, 'white', c)
 var statusButton = new GameEngine.GameObject(500, canvas.height-100, 25, 100, 0, 0, 'white', c)
 var mateButton = new GameEngine.GameObject(750, canvas.height-100, 25, 100, 0, 0, 'white', c)
-var buttons = {
+let buttons = [
   playButton,
   feedButton,
   statusButton,
   mateButton
-} 
+]
 
-// function animate() {
-//   window.requestAnimationFrame(animate)
-//   c.fillStyle = 'black'
-//   c.fillRect(0, 0, canvas.width, canvas.height)
-//   myObject.update()
-//   myObject.render()
-//   playButton.render()
-//   feedButton.render()
-//   statusButton.render()
-//   mateButton.render()
-// }
-const scale = 7;
-const width = 31 ;
-const height = 29;
-const scaledWidth = scale * width;
-const scaledHeight = scale * height;
+// Add event listener to Canvas for buttons
+canvas.addEventListener("click", function (evt) {
+  var mousePos = getMousePos(canvas, evt);
+  console.log(mousePos.x + ',' + mousePos.y);
 
-function drawFrame(frameX, frameY, canvasX, canvasY) {
-  c.drawImage(img,
-                frameX * width, (frameY * height)+290, width, height,
-                canvasX, canvasY, scaledWidth, scaledHeight);
+  buttons.forEach((button => {
+    if (button.checkCollision(mousePos.x, mousePos.y,
+      button.x, button.y,
+      button.width, button.height))
+      {
+        button.color = "blue";
+      }
+  }))
+
+}, false);
+
+
+function getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+  };
 }
+
+// Define Tamagotchi Sprite
+let spritesToRender = []
+var myTamaIdle = new GameEngine.Sprite(canvasWidth/2, canvasHeight/2, 
+  29, 31, 0, 0, 'white', c, "img/tamagotchi.png", 
+  290, 7, 50)
+
+var myTamaIdle_2 = new GameEngine.Sprite(canvasWidth/3, canvasHeight/3, 
+29, 31, 0, 0, 'white', c, "img/tamagotchi.png", 
+290, 7, 50)
+
+spritesToRender.push(myTamaIdle)
+spritesToRender.push(myTamaIdle_2)
+
+// Set onload function for all sprites in spritesToRender
+spritesToRender.forEach((sprite) => {
+  sprite.img.onload = function() {
+    init();
+  }
+})
 
 const cycleLoop = [0,1];
 let currentLoopIndex = 0;
@@ -58,7 +69,7 @@ let frameCount = 0;
 
 function step() {
   frameCount++;
-  if (frameCount < 50) {
+  if (frameCount < myTamaIdle.fps) {
     window.requestAnimationFrame(step);
     return;
   }
@@ -66,11 +77,13 @@ function step() {
   c.clearRect(0, 0, canvas.width, canvas.height);
   c.fillStyle = 'pink'
   c.fillRect(0, 0, canvas.width, canvas.height);
-  drawFrame(cycleLoop[currentLoopIndex], 0, 350, 150); // sprite thing
-  playButton.render()
-  feedButton.render()
-  statusButton.render()
-  mateButton.render()
+  myTamaIdle.render(cycleLoop[currentLoopIndex], 0, 350, 150); // sprite thing 350 150
+  myTamaIdle_2.render(cycleLoop[currentLoopIndex], 0, 240, 100); // sprite thing 350 150
+
+  buttons.forEach((button => {
+    button.render()
+  }))
+
   currentLoopIndex++;
   if (currentLoopIndex >= cycleLoop.length) {
     currentLoopIndex = 0;
@@ -80,29 +93,6 @@ function step() {
 
 function init() {
   window.requestAnimationFrame(step);
-}
-
-function checkCollision(px, py, rx, ry, rw, rh){
-    if (px >= rx &&         // right of the left edge AND
-    px <= rx + rw &&    // left of the right edge AND
-    py >= ry &&         // below the top AND
-    py <= ry + rh) {    // above the bottom
-        return true;
-  }
-  return false;
-}
-
-canvas.addEventListener("click", function (evt) {
-  var mousePos = getMousePos(canvas, evt);
-  console.log(mousePos.x + ',' + mousePos.y);
-}, false);
-
-function getMousePos(canvas, evt) {
-  var rect = canvas.getBoundingClientRect();
-  return {
-      x: evt.clientX - rect.left,
-      y: evt.clientY - rect.top
-  };
 }
 
 window.playMusic = playMusic;
