@@ -1,15 +1,10 @@
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
-
-
-canvas.width = 1024
-canvas.height = 576
-
-c.fillRect(0, 0, canvas.width, canvas.height)
-
 canvas.width = 1024
 canvas.height = 576
 c.fillRect(0, 0, canvas.width, canvas.height)
+
 
 let img = new Image();
 img.src = 'img/tamagotchi.png';
@@ -21,10 +16,6 @@ function changeColor() {
   const custom_color = document.querySelector('#colorpicker').value
   document.body.style.backgroundColor = custom_color;
 }
-
-
-
-
 
 class GameObject {
   constructor(x, y, height, width, vx, vy, color='white', canvas){
@@ -41,14 +32,13 @@ class GameObject {
     this.canvas = canvas
   }
 
-
   update(){
     // this stinks
     if (this.x + this.vx >= canvas.width || this.x + this.vx <= 0){
-      this.vx = -this.vx;
+      this.vx = - this.vx;
     } 
     if (this.y + this.vy >= canvas.height || this.y + this.vy <= 0){
-      this.vy =-this.vy;
+      this.vy = - this.vy;
     }
     this.x += this.vx
     this.y += this.vy
@@ -77,8 +67,9 @@ class Sprite extends GameObject {
       this.currentFrame * this.width, this.height + this.offsetY, this.width, this.height,
       this.x, this.y, this.width * this.scale, this.scale *this.height);
   }
-
 }
+
+
 
 var myObject = new GameObject(100,100,25,25,1,5,'blue', c)
 
@@ -93,18 +84,17 @@ var buttons = {
   mateButton
 } 
 
-function animate() {
-  window.requestAnimationFrame(animate)
-  c.fillStyle = 'black'
-  c.fillRect(0, 0, canvas.width, canvas.height)
-  myObject.update()
-  myObject.render()
-  playButton.render()
-  feedButton.render()
-  statusButton.render()
-  mateButton.render()
-
-}
+// function animate() {
+//   window.requestAnimationFrame(animate)
+//   c.fillStyle = 'black'
+//   c.fillRect(0, 0, canvas.width, canvas.height)
+//   myObject.update()
+//   myObject.render()
+//   playButton.render()
+//   feedButton.render()
+//   statusButton.render()
+//   mateButton.render()
+// }
 const scale = 7;
 const width = 31 ;
 const height = 29;
@@ -131,7 +121,11 @@ function step() {
   c.clearRect(0, 0, canvas.width, canvas.height);
   c.fillStyle = 'pink'
   c.fillRect(0, 0, canvas.width, canvas.height);
-  drawFrame(cycleLoop[currentLoopIndex], 0, 350, 150);
+  drawFrame(cycleLoop[currentLoopIndex], 0, 350, 150); // sprite thing
+  playButton.render()
+  feedButton.render()
+  statusButton.render()
+  mateButton.render()
   currentLoopIndex++;
   if (currentLoopIndex >= cycleLoop.length) {
     currentLoopIndex = 0;
@@ -148,7 +142,6 @@ var audio = new Audio('music/song.m4a');
 
 function playMusic(){
   var note = document.querySelector('.note')
-
   if (play == true){
     audio.pause()
     play = false;
@@ -160,3 +153,4 @@ function playMusic(){
   note.src = 'img/note.png'
 }
 
+tamaButton.yell()
