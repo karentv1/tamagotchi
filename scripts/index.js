@@ -1,9 +1,10 @@
+import * as GameEngine from "../scripts/game.js";
+
 
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
-canvas.width = 1024
-canvas.height = 576
-c.fillRect(0, 0, canvas.width, canvas.height)
+
+
 
 
 let img = new Image();
@@ -12,71 +13,15 @@ img.onload = function() {
   init();
 };
 
-function changeColor() {
-  const custom_color = document.querySelector('#colorpicker').value
-  document.body.style.backgroundColor = custom_color;
-}
-
-class GameObject {
-  constructor(x, y, height, width, vx, vy, color='white', canvas){
-    this.x=x
-    this.y=y
-
-    this.height =height
-    this.width = width
-
-    this.vx = vx
-    this.vy = vy
-
-    this.color = color
-    this.canvas = canvas
-  }
-
-  update(){
-    // this stinks
-    if (this.x + this.vx >= canvas.width || this.x + this.vx <= 0){
-      this.vx = - this.vx;
-    } 
-    if (this.y + this.vy >= canvas.height || this.y + this.vy <= 0){
-      this.vy = - this.vy;
-    }
-    this.x += this.vx
-    this.y += this.vy
-  }
-  render(){
-    this.canvas.fillStyle = this.color
-    this.canvas.fillRect(this.x, this.y, this.width, this.height)
-  }
-}
-
-class Sprite extends GameObject {
-  constructor(x, y, height, width, vx, vy, color='white', canvas,img, offsetX, offsetY,animations, scale){
-    super(x, y, height, width, vx, vy, color='white', canvas)
-    this.img = img
-    this.offsetX = offsetX
-    this.offsetY =offsetY
-    this.animations = animations
-    this.currentFrame = 0
-  }
-
-  render(){
-    if (this.currentFrame > this.animations.maxFrame){
-      this.currentFrame = 0;
-    } 
-    this.canvas.drawImage(img,
-      this.currentFrame * this.width, this.height + this.offsetY, this.width, this.height,
-      this.x, this.y, this.width * this.scale, this.scale *this.height);
-  }
-}
 
 
 
-var myObject = new GameObject(100,100,25,25,1,5,'blue', c)
+var myObject = new GameEngine.GameObject(100,100,25,25,1,5,'blue', c)
 
-var playButton = new GameObject(100, canvas.height-100, 25, 100, 0, 0, 'white', c)
-var feedButton = new GameObject(250, canvas.height-100, 25, 100, 0, 0, 'white', c)
-var statusButton = new GameObject(500, canvas.height-100, 25, 100, 0, 0, 'white', c)
-var mateButton = new GameObject(750, canvas.height-100, 25, 100, 0, 0, 'white', c)
+var playButton = new GameEngine.GameObject(100, canvas.height-100, 25, 100, 0, 0, 'white', c)
+var feedButton = new GameEngine.GameObject(250, canvas.height-100, 25, 100, 0, 0, 'white', c)
+var statusButton = new GameEngine.GameObject(500, canvas.height-100, 25, 100, 0, 0, 'white', c)
+var mateButton = new GameEngine.GameObject(750, canvas.height-100, 25, 100, 0, 0, 'white', c)
 var buttons = {
   playButton,
   feedButton,
@@ -136,10 +81,35 @@ function step() {
 function init() {
   window.requestAnimationFrame(step);
 }
+
+function checkCollision(px, py, rx, ry, rw, rh){
+    if (px >= rx &&         // right of the left edge AND
+    px <= rx + rw &&    // left of the right edge AND
+    py >= ry &&         // below the top AND
+    py <= ry + rh) {    // above the bottom
+        return true;
+  }
+  return false;
+}
+
+canvas.addEventListener("click", function (evt) {
+  var mousePos = getMousePos(canvas, evt);
+  console.log(mousePos.x + ',' + mousePos.y);
+}, false);
+
+function getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+  };
+}
+
+window.playMusic = playMusic;
+window.changeColor = changeColor;
+
 let play = false
 var audio = new Audio('music/song.m4a');
-
-
 function playMusic(){
   var note = document.querySelector('.note')
   if (play == true){
@@ -153,4 +123,7 @@ function playMusic(){
   note.src = 'img/note.png'
 }
 
-tamaButton.yell()
+function changeColor() {
+  const custom_color = document.querySelector('#colorpicker').value
+  document.body.style.backgroundColor = custom_color;
+}
