@@ -7,7 +7,12 @@ const canvasWidth = 1024
 const canvasHeight = 576
 
 // Define Buttons
-var playButton = new GameEngine.GameObject(100, canvas.height-100, 25, 100, 0, 0, 'white', c)
+
+
+
+var playButton = new GameEngine.TamaButton(100, canvas.height-100, 25, 100, 0, 0, 'white', c, function(){
+  this.color ='pink'
+})
 var feedButton = new GameEngine.GameObject(250, canvas.height-100, 25, 100, 0, 0, 'white', c)
 var statusButton = new GameEngine.GameObject(500, canvas.height-100, 25, 100, 0, 0, 'white', c)
 var mateButton = new GameEngine.GameObject(750, canvas.height-100, 25, 100, 0, 0, 'white', c)
@@ -18,23 +23,13 @@ let buttons = [
   mateButton
 ]
 
-// Add event listener to Canvas for buttons
+//report the mouse position on click
 canvas.addEventListener("click", function (evt) {
   var mousePos = getMousePos(canvas, evt);
-  console.log(mousePos.x + ',' + mousePos.y);
-
-  buttons.forEach((button => {
-    if (button.checkCollision(mousePos.x, mousePos.y,
-      button.x, button.y,
-      button.width, button.height))
-      {
-        button.color = "blue";
-      }
-  }))
-
+  // alert(mousePos.x + ',' + mousePos.y);
 }, false);
 
-
+//Get Mouse Position
 function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
   return {
@@ -42,6 +37,9 @@ function getMousePos(canvas, evt) {
       y: evt.clientY - rect.top
   };
 }
+
+
+
 
 // Define Tamagotchi Sprite
 let spritesToRender = []
@@ -56,12 +54,12 @@ var myTamaIdle_2 = new GameEngine.Sprite(canvasWidth/3, canvasHeight/3,
 spritesToRender.push(myTamaIdle)
 spritesToRender.push(myTamaIdle_2)
 
-// Set onload function for all sprites in spritesToRender
-spritesToRender.forEach((sprite) => {
-  sprite.img.onload = function() {
-    init();
-  }
-})
+// Set onload function for all sprites in spritesToRender don't need this
+// spritesToRender.forEach((sprite) => {
+//   sprite.img.onload = function() {
+//     init();
+//   }
+// })
 
 const cycleLoop = [0,1];
 let currentLoopIndex = 0;
@@ -73,12 +71,13 @@ function step() {
     window.requestAnimationFrame(step);
     return;
   }
+
   frameCount = 0;
   c.clearRect(0, 0, canvas.width, canvas.height);
   c.fillStyle = 'pink'
   c.fillRect(0, 0, canvas.width, canvas.height);
-  myTamaIdle.render(cycleLoop[currentLoopIndex], 0, 350, 150); // sprite thing 350 150
-  myTamaIdle_2.render(cycleLoop[currentLoopIndex], 0, 240, 100); // sprite thing 350 150
+  myTamaIdle.render(cycleLoop[currentLoopIndex], 0); // sprite thing 350 150
+  myTamaIdle_2.render(cycleLoop[currentLoopIndex], 0); // sprite thing 350 150
 
   buttons.forEach((button => {
     button.render()
@@ -117,3 +116,6 @@ function changeColor() {
   const custom_color = document.querySelector('#colorpicker').value
   document.body.style.backgroundColor = custom_color;
 }
+
+init(); // call init once here instead of for every sprite
+

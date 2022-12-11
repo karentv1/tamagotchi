@@ -29,7 +29,11 @@ export class GameObject {
   }
 }
 
-export class FeedButton extends GameObject {
+export class TamaButton extends GameObject {
+  constructor(x, y, height, width, vx, vy, color='white', canvas, clickEvent){
+    super (x, y, height, width, vx, vy, color='white', canvas)
+    this.clickEvent = clickEvent;
+  }
 }
 
 export class Sprite extends GameObject {
@@ -43,9 +47,16 @@ export class Sprite extends GameObject {
     this.fps = fps
   }
 
-  render(frameX, frameY, canvasX, canvasY){
-    this.canvas.drawImage(this.img,
-                  frameX * this.width, (frameY * this.height)+this.offset, this.width, this.height,
-                  canvasX, canvasY, this.scale * this.width, this.scale * this.height);
+  render(frameX, frameY){
+    this.canvas.drawImage(
+      this.img,
+      frameX * this.width, 
+      (frameY * this.height)+this.offset, 
+      this.width, 
+      this.height,
+      this.x, 
+      this.y, 
+      this.scale * this.width, 
+      this.scale * this.height);
     } //offset = 290
 }
