@@ -7,9 +7,6 @@ const canvasWidth = 1024
 const canvasHeight = 576
 
 // Define Buttons
-
-
-
 var playButton = new GameEngine.TamaButton(100, canvas.height-100, 25, 100, 0, 0, 'white', c, function(){
   this.color ='pink'
 })
@@ -23,7 +20,7 @@ let buttons = [
   mateButton
 ]
 
-//report the mouse position on click
+//Report the mouse position on click
 canvas.addEventListener("click", function (evt) {
   var mousePos = getMousePos(canvas, evt);
   // alert(mousePos.x + ',' + mousePos.y);
@@ -38,33 +35,16 @@ function getMousePos(canvas, evt) {
   };
 }
 
-
-
-
 // Define Tamagotchi Sprite
 let spritesToRender = []
+const cycleLoop = [0,1];
 var myTamaIdle = new GameEngine.Sprite(canvasWidth/2, canvasHeight/2, 
   29, 31, 0, 0, 'white', c, "img/tamagotchi.png", 
-  290, 7, 50)
-
-var myTamaIdle_2 = new GameEngine.Sprite(canvasWidth/3, canvasHeight/3, 
-29, 31, 0, 0, 'white', c, "img/tamagotchi.png", 
-290, 7, 50)
+  290, 7, 50, cycleLoop)
 
 spritesToRender.push(myTamaIdle)
-spritesToRender.push(myTamaIdle_2)
 
-// Set onload function for all sprites in spritesToRender don't need this
-// spritesToRender.forEach((sprite) => {
-//   sprite.img.onload = function() {
-//     init();
-//   }
-// })
-
-const cycleLoop = [0,1];
-let currentLoopIndex = 0;
-let frameCount = 0;
-
+var frameCount = 0;
 function step() {
   frameCount++;
   if (frameCount < myTamaIdle.fps) {
@@ -76,17 +56,11 @@ function step() {
   c.clearRect(0, 0, canvas.width, canvas.height);
   c.fillStyle = 'pink'
   c.fillRect(0, 0, canvas.width, canvas.height);
-  myTamaIdle.render(cycleLoop[currentLoopIndex], 0); // sprite thing 350 150
-  myTamaIdle_2.render(cycleLoop[currentLoopIndex], 0); // sprite thing 350 150
+  myTamaIdle.render(); // sprite thing 350 150
 
   buttons.forEach((button => {
     button.render()
   }))
-
-  currentLoopIndex++;
-  if (currentLoopIndex >= cycleLoop.length) {
-    currentLoopIndex = 0;
-  }
   window.requestAnimationFrame(step);
 }
 
@@ -118,4 +92,3 @@ function changeColor() {
 }
 
 init(); // call init once here instead of for every sprite
-

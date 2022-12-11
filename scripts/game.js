@@ -37,7 +37,7 @@ export class TamaButton extends GameObject {
 }
 
 export class Sprite extends GameObject {
-  constructor(x, y, height, width, vx, vy, color='white', canvas, img, offset, scale, fps){
+  constructor(x, y, height, width, vx, vy, color='white', canvas, img, offset, scale, fps, animationFrames){
     super(x, y, height, width, vx, vy, color='white', canvas)
     this.img = new Image() // image object
     this.img.src = img // image source
@@ -45,18 +45,27 @@ export class Sprite extends GameObject {
     //this.animations = animations // represents each state of the sprite (standing, sitting, etc.)
     this.scale = scale
     this.fps = fps
+    this.animationFrames = animationFrames //list of cycle loops
+    this.currentFrameX = 0
+    this.currentFrameY = 0; // this moves us down the y-axis for sprite sheet
   }
 
-  render(frameX, frameY){
+  render(){
     this.canvas.drawImage(
       this.img,
-      frameX * this.width, 
-      (frameY * this.height)+this.offset, 
+      this.animationFrames[this.currentFrameX] * this.width, 
+      (this.currentFrameY * this.height)+this.offset,  
       this.width, 
       this.height,
       this.x, 
       this.y, 
       this.scale * this.width, 
       this.scale * this.height);
+
+      this.currentFrameX++;
+      if (this.currentFrameX >= this.animationFrames.length) {
+        this.currentFrameX = 0;
+      }
+
     } //offset = 290
 }
