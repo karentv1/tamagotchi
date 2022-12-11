@@ -24,6 +24,12 @@ let buttons = [
 canvas.addEventListener("click", function (evt) {
   var mousePos = getMousePos(canvas, evt);
   // alert(mousePos.x + ',' + mousePos.y);
+  buttons.forEach((button => {
+    if (button.checkCollision(mousePos.x, mousePos.y,
+      button.x, button.y, 
+      button.width, button.height)){
+        button.color = "blue";
+      }}))
 }, false);
 
 //Get Mouse Position
@@ -40,19 +46,12 @@ let spritesToRender = []
 const cycleLoop = [0,1];
 var myTamaIdle = new GameEngine.Sprite(canvasWidth/2, canvasHeight/2, 
   29, 31, 0, 0, 'white', c, "img/tamagotchi.png", 
-  290, 7, 50, cycleLoop)
+  290, 7, 20, cycleLoop)
 
 spritesToRender.push(myTamaIdle)
 
 var frameCount = 0;
 function step() {
-  frameCount++;
-  if (frameCount < myTamaIdle.fps) {
-    window.requestAnimationFrame(step);
-    return;
-  }
-
-  frameCount = 0;
   c.clearRect(0, 0, canvas.width, canvas.height);
   c.fillStyle = 'pink'
   c.fillRect(0, 0, canvas.width, canvas.height);
@@ -61,6 +60,7 @@ function step() {
   buttons.forEach((button => {
     button.render()
   }))
+
   window.requestAnimationFrame(step);
 }
 
